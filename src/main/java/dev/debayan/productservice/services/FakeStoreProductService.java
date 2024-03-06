@@ -46,18 +46,18 @@ public class FakeStoreProductService implements ProductService {
         return products;
     }
 
-    @Override
-    public List<Category> getAllCategories() {
-        CategoryRequestDto[] categoryRequests = restTemplate.getForObject(
-                "https://fakestoreapi.com/products/categories",
-                CategoryRequestDto[].class);
-        List<Category> categories = new ArrayList<>();
-        for (CategoryRequestDto categoryRequest: categoryRequests) {
-            categories.add(categoryRequest.toCategory());
-        }
-        return categories;
-
-    }
+//    @Override
+//    public List<Category> getAllCategories() {
+//        CategoryRequestDto[] categoryRequests = restTemplate.getForObject(
+//                "https://fakestoreapi.com/products/categories",
+//                CategoryRequestDto[].class);
+//        List<Category> categories = new ArrayList<>();
+//        for (CategoryRequestDto categoryRequest: categoryRequests) {
+//            categories.add(categoryRequest.toCategory());
+//        }
+//        return categories;
+//
+//    }
 
     @Override
     public List<Product> getAllProducts() {
@@ -108,7 +108,7 @@ public class FakeStoreProductService implements ProductService {
                                  String image) {
 
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
-        fakeStoreProductDto.setId(ProductId);
+       // fakeStoreProductDto.setId(ProductId);
         fakeStoreProductDto.setTitle(title);
         fakeStoreProductDto.setDescription(description);
         fakeStoreProductDto.setCategory(category);
@@ -120,5 +120,6 @@ public class FakeStoreProductService implements ProductService {
                 FakeStoreProductDto.class);
 
         return response.toProduct();
+
     }
 }

@@ -7,17 +7,27 @@ import dev.debayan.productservice.modals.Product;
 import dev.debayan.productservice.services.FakeStoreProductService;
 import dev.debayan.productservice.services.ProductService;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
 @RestController
 public class ProductController {
 
+
+
     private ProductService productService ;
 
-    public  ProductController(ProductService productService){
+    private  RestTemplate restTemplate;
+
+    public  ProductController(ProductService productService, RestTemplate restTemplate){
         this.productService = productService;
+        this.restTemplate = restTemplate;
     }
+//    public  ProductController(RestTemplate restTemplate){
+//        this.restTemplate = restTemplate;
+//    }
+
     // Post/ products
     // request body
     // {
@@ -47,9 +57,15 @@ public class ProductController {
         return productService.getProductDetailsCategory(Category);
     }
 
-    @GetMapping("products/categories")
-    public  List<Category> getAllCategoryDetails() {
-        return  productService.getAllCategories();
+//    @GetMapping("products/categories")
+//    public  List<Category> getAllCategoryDetails() {
+//        return  productService.getAllCategories();
+//    }
+
+    @GetMapping("/products/categories")
+    public String[] getAllCategories()
+    {
+        return restTemplate.getForObject("https://fakestoreapi.com/products/categories" , String[].class);
     }
 
     @DeleteMapping("/products/{id}")
@@ -62,7 +78,7 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    @PutMapping("/product/{id}")
+    @PutMapping("/products/{id}")
     public  Product  updateProduct(@PathVariable("id") Long ProductId, @RequestBody UpdateProductRequestDTO request) {
         return productService.updateProduct(
                 ProductId,
