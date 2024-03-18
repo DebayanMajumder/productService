@@ -1,5 +1,6 @@
 package dev.debayan.productservice.services;
 
+import dev.debayan.productservice.Exception.ProductNotFoundException;
 import dev.debayan.productservice.dtos.CreateProductRequestDto;
 import dev.debayan.productservice.modals.Category;
 import dev.debayan.productservice.modals.Product;
@@ -8,13 +9,20 @@ import java.util.List;
 
 public interface ProductService {
 
-    Product getSingleProduct(Long ProductId) ;
+    Product getSingleProduct(Long ProductId) throws ProductNotFoundException;
 
     Product deleteProductDetails(Long ProductId);
 
    List<Product>  getProductDetailsCategory(String Category);
 
-//   List<Category> getAllCategories();
+   List<String> getAllCategories();
+
+    Product replaceProduct(Long id,
+                           String title,
+                           String description,
+                           String category,
+                           double price,
+                           String image) throws ProductNotFoundException;
 
     List<Product> getAllProducts();
 
@@ -29,5 +37,5 @@ public interface ProductService {
                           String description,
                           String category,
                           double price,
-                          String image);
+                          String image) throws ProductNotFoundException;
 }

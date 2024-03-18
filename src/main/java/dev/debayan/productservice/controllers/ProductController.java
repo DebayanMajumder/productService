@@ -1,11 +1,15 @@
 package dev.debayan.productservice.controllers;
 
+import dev.debayan.productservice.Exception.ProductNotFoundException;
 import dev.debayan.productservice.dtos.CreateProductRequestDto;
 import dev.debayan.productservice.dtos.UpdateProductRequestDTO;
 import dev.debayan.productservice.modals.Category;
 import dev.debayan.productservice.modals.Product;
 import dev.debayan.productservice.services.FakeStoreProductService;
 import dev.debayan.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +24,7 @@ public class ProductController {
 
     private  RestTemplate restTemplate;
 
-    public  ProductController(ProductService productService, RestTemplate restTemplate){
+    public  ProductController(@Qualifier("SelfProductService") ProductService productService, RestTemplate restTemplate){
         this.productService = productService;
         this.restTemplate = restTemplate;
     }
@@ -48,7 +52,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{id}")
-    public Product getProductDetails(@PathVariable("id") Long ProductId) {
+    public Product getProductDetails(@PathVariable("id") Long ProductId) throws Exception {
         return  productService.getSingleProduct((ProductId));
     }
 
@@ -79,7 +83,7 @@ public class ProductController {
     }
 
     @PutMapping("/products/{id}")
-    public  Product  updateProduct(@PathVariable("id") Long ProductId, @RequestBody UpdateProductRequestDTO request) {
+    public  Product  updateProduct(@PathVariable("id") Long ProductId, @RequestBody UpdateProductRequestDTO request) throws  Exception{
         return productService.updateProduct(
                 ProductId,
                 request.getTitle(),
@@ -89,6 +93,19 @@ public class ProductController {
                 request.getImage()
 
         ) ;
+    }
+
+    @PatchMapping("/products/{id}")
+    public ResponseEntity<Product> updateProducts(@PathVariable("id") Long id, @RequestBody UpdateProductRequestDTO updateRequest) throws Exception {
+        Product updateProductResponse = productService.updateProduct(id,
+                updateRequest.getTitle(),
+                updateRequest.getDescription(),
+                updateRequest.getCategory(),
+                updateRequest.getPrice(),
+                updateRequest.getImage()
+        );
+
+        return new ResponseEntity<>(updateProductResponse, HttpStatus.OK);
     }
 
 

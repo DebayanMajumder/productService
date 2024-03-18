@@ -1,17 +1,19 @@
 package dev.debayan.productservice.services;
 
+import dev.debayan.productservice.Exception.ProductNotFoundException;
 import dev.debayan.productservice.dtos.CategoryRequestDto;
 import dev.debayan.productservice.dtos.FakeStoreProductDto;
 import dev.debayan.productservice.modals.Category;
 import dev.debayan.productservice.modals.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import dev.debayan.productservice.Exception.ProductNotFoundException;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("FakestoreProductService")
 public class FakeStoreProductService implements ProductService {
 
     private RestTemplate restTemplate;
@@ -19,7 +21,7 @@ public class FakeStoreProductService implements ProductService {
         this.restTemplate = restTemplate;
     }
     @Override
-    public Product getSingleProduct(Long ProductId) {
+    public Product getSingleProduct(Long ProductId) throws ProductNotFoundException {
        FakeStoreProductDto fakeStoreProduct =  restTemplate.getForObject("https://fakestoreapi.com/products/" + ProductId,
                 FakeStoreProductDto.class);
         return fakeStoreProduct.toProduct();
@@ -44,6 +46,16 @@ public class FakeStoreProductService implements ProductService {
             products.add(fakeStoreProduct.toProduct());
         }
         return products;
+    }
+
+    @Override
+    public List<String> getAllCategories() {
+        return null;
+    }
+
+    @Override
+    public Product replaceProduct(Long id, String title, String description, String category, double price, String image) throws  ProductNotFoundException{
+        return null;
     }
 
 //    @Override
@@ -105,7 +117,7 @@ public class FakeStoreProductService implements ProductService {
                                  String description,
                                  String category,
                                  double price,
-                                 String image) {
+                                 String image) throws ProductNotFoundException{
 
         FakeStoreProductDto fakeStoreProductDto = new FakeStoreProductDto();
        // fakeStoreProductDto.setId(ProductId);
